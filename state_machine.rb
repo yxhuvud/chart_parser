@@ -19,7 +19,7 @@ class StateMachine
 
   def generate_state from, sym, dotted, queue
     unless (new_state = State.get(dotted))
-      new_state = State.new(dotted)
+      new_state = State.new(self, dotted)
       queue.push new_state
       @states << new_state
     end
@@ -29,7 +29,7 @@ class StateMachine
   def generate_states
     start_productions =
       grammar.start_symbols.flat_map {|sym| grammar.matching_rules sym }
-    state = State.new(start_productions)
+    state = State.new(self, start_productions)
     @states << state
     queue = [state]
     while(state = queue.pop)
@@ -37,14 +37,18 @@ class StateMachine
         generate_state(state, GrammarSymbol::EMPTY,
                        state.nonkernels(grammar), queue)
       end
-      transitions = state.transitions
-      transitions.each do |symbol, dotted_rules|
-        generate_state(state, symbol,
-                       dotted_rules, queue)
-      end
+      transition_states state, queue
     end
   end
 
+  def transition_states state, queue
+    transitions = state.transitions
+    transitions.each do |symbol, dotted_rules|
+      generate_state(state, symbol,
+                     dotted_rules, queue)
+    end
+  end
+    
   class State
     class << self
       attr_accessor :states
@@ -55,18 +59,23 @@ class StateMachine
       end
     end
 
-    attr_accessor :dotted_rules, :timestamp
+    attr_accessor :dotted_rules, :state_machine
 
     def to_str
       dotted_rules.inspect
     end
 
-    def initialize dotted_rules
+    def initialize state_machine, dotted_rules
+      @state_machine = state_machine
       raise  if dotted_rules.empty?
       raise  unless dotted_rules.all? {|r| r.kind_of? ProductionRule}
       @dotted_rules = dotted_rules.sort_by &:sort_key
       self.class.states ||= {}
       self.class.states[@dotted_rules] = self
+    end
+
+    def goto sym
+      state_machine.goto(self, sym)
     end
 
     def nonkernels grammar
@@ -79,7 +88,6 @@ class StateMachine
         visited << lhs
         expansions = grammar.matching_rules(lhs)
         expansions.each do |exp|
-
           lhss_to_find << exp.rhs.first
           expanded_rules << exp
         end
@@ -89,9 +97,9 @@ class StateMachine
 
     def transitions
       nexts = @dotted_rules.group_by(&:current)
-      nexts.each {|k, v|
+      nexts.each do |k, v|
         nexts[k] = v.map(&:next).compact
-      }
+      end
       nexts.reject {|k, v| v.empty? }
     end
   end

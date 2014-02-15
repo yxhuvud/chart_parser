@@ -41,13 +41,7 @@ class Grammar
     rs = rules.select do |rule|
       sym == rule.lhs
     end
-    rs.each do |r|
-      pos = 0
-      while GrammarSymbol::e_non_terminal?(r.rhs[pos])
-        pos += 1
-      end
-      r.pos = pos
-    end
+    rs.each &:consume_e_non_terminals
     rs
   end
 
@@ -55,7 +49,6 @@ class Grammar
     NihilistNormalForm.new self
   end
   alias to_nnf to_nihilist_normal_form
-
 
   class NihilistNormalForm < Grammar
 
@@ -80,7 +73,7 @@ class Grammar
 
     def add_split_rules_from grammar
       grammar.rules.each do |rule|
-        rhss = split_nullable rule.rhs
+        rhss = split_nullable(rule.rhs)
         rhss.each do |rhs|
           add_rule rule.lhs, *rhs
         end

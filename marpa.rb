@@ -1,119 +1,81 @@
 require 'set'
 require 'grammar'
-
-
-class AHFA
-  def initialize grammar
-  end
-
-  def goto from, trans
-  end
-end
-
-def EarlyItems
-  START_ITEM = [0, :start, 0]
-
-  def initialize
-    @psl = fdsaofd #fdofdsa
-
-    @items = Hash.new {|h, k| h[k] = Set.new }
-    add *START_ITEM
-  end
-
-  def add i, confirmed
-    confirmed_item = [confirmed, origin]
-    predicted = goto(confirmed, :empty)
-    if confirmed_item new?
-      @items[i] << confirmed_item
-    end
-    if predicted
-      predicted_item = [predicted, i]
-      if predicted_item new?
-        @items[i] << predicted_item
-      end
-    end
-  end
-
-  def new? item
-  end
-
-  def last i
-    @items.last
-  end
-end
+rqeuire 'earley_item'
 
 class Marpa
-  attr_accessor :earley_items, :source
-
+  attr_accessor :earley_items, :source, :state_machine
 
   def initialize grammar
     @transitions = {|h,k|  h[k] = {} }
-  end
-
-  def setup
+    @state_machine = StateMachine.new(grammar)
     @earley_items = EarleyItems.new
   end
 
   def parse source
-    setup
     @source = source
-    source.each_char.with_index do |char, i|
-      scan_pass i, char
-      if earley_items.last i
-        return false
-      end
-      reduction_pass i
+    source.each_char.with_index method(:parse_char)
+    success?
+  end
+
+  def parse_char char, i
+    scan_pass i, char
+    # ???
+    if earley_items.last(i)
+      return
     end
-    @earley_items[source.size].any? {|rule| rule.accept? }
+    reduction_pass i
+  end
+
+  def success?
+    earley_items[source.size].any? &:accept?
   end
 
   def scan_pass i, sym
     transitions(i - 1, sym).each do |from, origin|
-      to = goto(from, sym)
-      @earley_items.add i, to, origin
+      to = from.goto(sym)
+      earley_items.add i, to, origin 
     end
   end
 
   def reduction_pass i
-    @earley_items.each do |work, origin|
-      lh_sides = completed_rules(work)
+    earley_items.each_seen_at(i) do |item| #|work, origin|
+      lh_sides = item.state.completed_rules.map(&:lhs)
       lh_sides.each do |lhs|
-        reduce_one_lhs(i, origin, lhs)
+        reduce_one_lhs(i, item.origin, lhs)
       end
     end
     memoize_transitions i
   end
 
   def memoize_transitions i
-    postdot_symbols(i).each do |sym|
-      if leo_eligible?(sym)
-        transitions[i][sym] = LIM #??
-      else
+    postdot_symbols.each do |sym|
+    #  if leo_eligible?(sym)
+    #    transitions[i][sym] = LIM #??
+    #  else
         transitions[i][sym] = postdot_match(i, sym)
-      end
+   #   end
     end
   end
 
   def reduce_one_lhs i, origin, lhs
     transitions[i][lhs].each do |pim|
-      if LIM
-        leo_reduction_operation i, pim
-      else
+   #   if LIM
+   #     leo_reduction_operation i, pim
+   #   else
         earley_reduction_operation i, pim, lhs
-      end
+   #   end
     end
   end
 
   def earley_reduction_operation i, from, trans
-    from_ah, origin = *from
-    to_ah = goto(from_ah, trans)
-    @earley_items.add i, to_ah, origin
+    to_ah = from.goto(trans) # from = from_ah
+    earley_items.add i, to_ah, from.origin
   end
 
   def leo_reduction_operation i, from
     from_ah, trans, origin = *from
-    to_ah = goto(from_ah, trans)
-    @earley_items.add i, to_ah, origin
+    to_ah = from_ah.goto(trans)
+    earley_items.add i, to_ah, origin
   end
 
   # todo helpers

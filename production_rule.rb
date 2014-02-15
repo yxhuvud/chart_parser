@@ -59,6 +59,14 @@ class ProductionRule
     rhs[@pos]
   end
 
+  def consume_e_non_terminals
+    pos = 0
+    while GrammarSymbol::e_non_terminal?(rhs[pos])
+      pos += 1
+    end
+    self.pos = pos
+  end
+
   module Alias
     def rule lhs, *rhs
       ProductionRule.new lhs, rhs
