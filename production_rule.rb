@@ -1,7 +1,9 @@
 class ProductionRule
-  attr_accessor :lhs, :rhs, :pos, :accept
+  attr_accessor :lhs, :rhs, :pos
 
   def initialize lhs, rhs, pos=nil
+    # FIXME ADD support for differentiating terminals and
+    # nonterminals.
     @lhs, = GrammarSymbol::builder(lhs)
     @rhs = GrammarSymbol::builder(rhs)
     @pos = pos
@@ -36,6 +38,10 @@ class ProductionRule
     else
       @penul = nil
     end
+  end
+
+  def completed?
+    !self.next
   end
 
   def next

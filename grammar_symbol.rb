@@ -2,17 +2,21 @@ require 'set'
 
 class GrammarSymbol
   EMPTY = :empty
-
+  # TODO: Lookuptable for terminals.
+  SYMBOLS = {}
   attr_accessor :sym, :e_non_terminal
 
   class << self
     attr_accessor :e_non_terminals
     def builder args
       Array(args).map {|arg|
-        if arg.instance_of? self
+        case
+        when arg.instance_of?(self)
           arg
+        when SYMBOLS[arg]
+          SYMBOLS[arg]
         else
-          new(arg)
+          SYMBOLS[arg] = new(arg)
         end
       }
     end
@@ -35,12 +39,14 @@ class GrammarSymbol
     end
   end
 
-  def initialize sym
+  def initialize sym, terminal=false
     @sym = sym
     @e_non_terminal = self.class.e_non_terminal?(sym)
+    @terminal = terminal
   end
 
   def terminal?
+    terminal
   end
 
   def e_non_terminal?
@@ -76,4 +82,7 @@ class GrammarSymbol
     sym.to_s
   end
 
+  def inspect
+    "%s" % to_s
+  end
 end

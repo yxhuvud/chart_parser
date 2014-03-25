@@ -1,4 +1,10 @@
 require_relative '../grammar_symbol'
 require_relative '../grammar'
 require_relative '../production_rule'
+require_relative '../state'
 require_relative '../state_machine'
+require_relative '../marpa'
+require_relative '../earley_item'
+
+require_relative 'examples/palindrome'
+require_relative 'examples/ambigous_a'

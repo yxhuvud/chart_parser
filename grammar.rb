@@ -45,6 +45,10 @@ class Grammar
     rs
   end
 
+  def start_productions
+    start_symbols.flat_map {|sym| matching_rules(sym) }
+  end
+  
   def to_nihilist_normal_form
     NihilistNormalForm.new self
   end
