@@ -16,7 +16,7 @@ class GrammarSymbol
         when SYMBOLS[arg]
           SYMBOLS[arg]
         else
-          SYMBOLS[arg] = new(arg)
+          SYMBOLS[arg] = new(arg, !arg.kind_of?(Symbol))
         end
       }
     end
@@ -35,7 +35,7 @@ class GrammarSymbol
     end
 
     def e sym
-      "#{sym}'"
+      :"#{sym.to_s}'"
     end
   end
 
@@ -79,10 +79,6 @@ class GrammarSymbol
   end
 
   def to_s
-    sym.to_s
-  end
-
-  def inspect
-    "%s" % to_s
+    sym
   end
 end

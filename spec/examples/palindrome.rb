@@ -1,22 +1,17 @@
 include ProductionRule::Alias
 
-start = GrammarSymbol.new("Start")
-s = GrammarSymbol.new("S")
-s2 = GrammarSymbol.new("S2")
-
 production_rules = [
-                    rule(start, s),
-                    rule(s, 'a', s2, 'a'),
-                    rule(s, 'b', s2, 'b'),
-                    rule(s, 'c', s2, 'c'),
-                    rule(s, 'a'),
-                    rule(s, 'b'),
-                    rule(s, 'c'),
+                    rule(:Start, :S),
 
-                    rule(s2, GrammarSymbol::EMPTY),
-                    rule(s2, s),
+                    rule(:S, 'a', :S2, 'a'),
+                    rule(:S, 'b', :S2, 'b'),
+                    rule(:S, 'c', :S2, 'c'),
+                    rule(:S, 'a'),
+                    rule(:S, 'b'),
+                    rule(:S, 'c'),
+
+                    rule(:S2, GrammarSymbol::EMPTY),
+                    rule(:S2, :S),
                    ]
 
-terminals = %w(a b c)
-
-PALINDROME = Grammar.new(production_rules, terminals, start)
+PALINDROME = Grammar.new(production_rules, :Start)

@@ -39,6 +39,12 @@ end
 
 class LeoItem < EarleyItem
   attr_accessor :trans
+
+  def initialize eim, trans
+    self.origin = eim.origin
+    self.state = eim.state
+    self.trans = trans
+  end
   
   def reduce sym, items
     items.add_item(goto(trans), origin)
@@ -92,11 +98,11 @@ class EarleyItems
   def memoize_transitions
     @items.each do |item|
       item.postdot_symbols.each do |sym|
-        #      if leo_eligible?(sym)
-        #        transitions[sym] = LIM #??
-        #      else
-        transitions[sym] += [item]
-        #      end
+      #  if leo_eligible?(sym)
+      #    transitions[sym] = [LeoItem.new(item, sym)]
+      #  else
+          transitions[sym] += [item]
+      #  end
       end
     end
   end

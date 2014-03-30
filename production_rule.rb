@@ -2,6 +2,9 @@ class ProductionRule
   attr_accessor :lhs, :rhs, :pos
 
   def initialize lhs, rhs, pos=nil
+    unless lhs.kind_of?(Symbol) || lhs.sym.kind_of?(Symbol)
+      raise  ArgumentError  
+    end
     # FIXME ADD support for differentiating terminals and
     # nonterminals.
     @lhs, = GrammarSymbol::builder(lhs)

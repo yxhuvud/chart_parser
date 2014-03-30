@@ -1,20 +1,15 @@
 require 'set'
 
 class Grammar
-  attr_reader :rules, :terminals, :start_symbols
+  attr_reader :rules, :start_symbols
 
-  def initialize rules, terminals, *start_symbols
+  def initialize rules, *start_symbols
     @rules = Set.new(rules)
-    @terminals = Set.new(terminals)
     @start_symbols = GrammarSymbol.builder(*start_symbols)
   end
 
   def rules= arr
     @rules = Set.new(arr)
-  end
-
-  def terminals= arr
-    @terminals = Set.new(arr)
   end
 
   def add_rule lhs, *rhs
@@ -57,7 +52,7 @@ class Grammar
   class NihilistNormalForm < Grammar
 
     def initialize grammar
-      super([], grammar.terminals, grammar.start_symbols)
+      super([], grammar.start_symbols)
       add_nullables_from grammar
       foo = 0
       begin
@@ -77,8 +72,8 @@ class Grammar
 
     def add_split_rules_from grammar
       grammar.rules.each do |rule|
-        rhss = split_nullable(rule.rhs)
-        rhss.each do |rhs|
+         rhss = split_nullable(rule.rhs)
+         rhss.each do |rhs|
           add_rule rule.lhs, *rhs
         end
       end

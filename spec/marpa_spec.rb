@@ -37,7 +37,7 @@ describe Marpa do
     end
 
     it "parse 'aba'" do 
-      subject.parse("a")
+      r = subject.parse("a")
       r.should be_true
       r = subject.parse("b")
       r.should be_false
@@ -56,12 +56,6 @@ describe Marpa do
       it("fails") { @result.should be_false }
       it("succeeds after continuing") do
         result = parser.parse("a")
-        puts
-        p subject.previous_items
-        p subject.previous_items.transitions
-        
-        p subject.earley_items
-        
         result.should be_true 
       end
 

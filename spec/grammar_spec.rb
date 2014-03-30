@@ -3,11 +3,11 @@ require 'spec_helper'
 include ProductionRule::Alias
 
 describe Grammar do
-  let(:e) { GrammarSymbol.new("E") } 
-  let(:start) { GrammarSymbol.new("Start") } 
-  let(:s) { GrammarSymbol.new("S") } 
+  let(:e) { GrammarSymbol.new(:E) }
+  let(:start) { GrammarSymbol.new(:Start) }
+  let(:s) { GrammarSymbol.new(:S) }
   
-  let(:empty_grammar) { Grammar.new([], [], start) }
+  let(:empty_grammar) { Grammar.new([], start) }
   let(:grammar) { AMBIGOUS_A }
 
   subject { grammar }
