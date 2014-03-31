@@ -1,8 +1,8 @@
 require 'set'
 
 class Marpa
-  attr_accessor :earley_items, :source, :state_machine, :state_size
-  attr_accessor :previous_items
+  attr_accessor :chart, :source, :state_machine, :state_size
+  attr_accessor :previous_chart
 
   def initialize grammar
     @state_machine = StateMachine.new(grammar)
@@ -11,9 +11,9 @@ class Marpa
   end
 
   def reset
-    @earley_items = EarleyItems.new(0, state_size)
-    @previous_items = nil
-    earley_items.add state_machine.starting_state, nil
+    @chart = Chart.new(0, state_size)
+    @previous_chart = nil
+    chart.add state_machine.starting_state, @chart
     self
   end
 
@@ -29,30 +29,30 @@ class Marpa
   end
 
   def marpa_pass sym
-    @previous_items = earley_items
-    @previous_items.memoize_transitions
+    @previous_chart = chart
+    @previous_chart.memoize_transitions
 
-    @earley_items = EarleyItems.new(@previous_items.index.succ, state_size)
+    @chart = Chart.new(@previous_chart.index.succ, state_size)
     consume sym
   end
   
   def consume sym
     scan_pass sym
     #TODO: Slippers
-    return  if earley_items.empty? 
+    return  if chart.empty? 
     reduction_pass
   end
 
   def success?
-    earley_items.accept?
+    chart.accept?
   end
 
   def scan_pass sym
-    @previous_items.scan(sym, earley_items)
+    @previous_chart.scan(sym, chart)
   end
 
   def reduction_pass
-    earley_items.reduce
-   # earley_items.memoize_transitions
+    chart.reduce
+    chart.memoize_transitions
   end
 end
