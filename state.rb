@@ -1,5 +1,6 @@
 class State
   attr_accessor :dotted_rules, :state_machine, :transitions, :index
+  attr_writer :accept
 
   def to_s
     index.to_s
@@ -57,8 +58,7 @@ class State
   end
 
   def accept?
-    # fixme: check if start state is completed.
-    completed_rules.any?
+    @accept
   end
   
   def completed

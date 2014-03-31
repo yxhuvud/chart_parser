@@ -6,6 +6,7 @@ class StateMachine
     @grammar = grammar.to_nnf
     @states = {}
     generate_states
+    mark_accept_states
   end
 
   def to_s
@@ -43,6 +44,17 @@ class StateMachine
       generate_state(state, GrammarSymbol::EMPTY,
                      state.nonkernels(grammar), queue)
       transition_states state, queue
+    end
+  end
+
+  def mark_accept_states
+    grammar.start_productions.each do |prod|
+      state = @starting_state
+      until prod.completed?
+        state = state.goto(prod.current)
+        prod = prod.next
+      end
+      state.accept = true
     end
   end
 

@@ -16,8 +16,7 @@ class EarleyItem
   end
 
   def accept?
-    origin == nil && 
-      state.accept?
+    state.accept?
   end
 
   def completed
