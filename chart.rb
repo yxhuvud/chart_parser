@@ -56,7 +56,7 @@ class Chart
   # move to earley_set.
   def leo_unique? d_rule
     penult = d_rule.penult
-    penult && earley_items.contain?(d_rule) &&
+    penult && items.contain?(d_rule) &&
       penult_unique?(earley_items, penult)
   end
 
