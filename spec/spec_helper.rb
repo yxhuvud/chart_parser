@@ -1,5 +1,6 @@
-require_relative '../grammar_symbol'
+require_relative '../symbol_table'
 require_relative '../grammar'
+require_relative '../grammar_definition'
 require_relative '../production_rule'
 require_relative '../state'
 require_relative '../state_machine'
@@ -9,3 +10,5 @@ require_relative '../marpa'
 
 require_relative 'examples/palindrome'
 require_relative 'examples/ambigous_a'
+require_relative 'examples/right_recursive'
+require_relative 'examples/left_recursive'

@@ -27,7 +27,7 @@ class Chart
   
   def add state, origin
     add_item(state, origin)
-    predicted = state.goto(:empty)
+    predicted = state.goto(ProductionRule::EMPTY)
     if predicted
       add_item(predicted, self)
     end
@@ -66,21 +66,20 @@ class Chart
 
   def scan sym, current
     # FIXME: Use a proper lookup table.
-    s = GrammarSymbol::builder(sym).first
  #   puts
- #   p "scanning %s" % sym
- #   p transitions
-    transitions[s].each do |item|
-      item.scan(s, current)
+  #  p "scanning %s" % sym
+  #  p transitions
+    transitions[sym].each do |item|
+      item.scan(sym, current)
     end
   end
 
   def reduce
     items.each do |item|
- #     p "reducing item %s" % item
+   #   p "reducing item %s" % item
       item.completed.each do |lhs|
         next  unless item.origin # start production
-        #      p 'completed: %s, pos %s' % [lhs, item.origin.index]
+    #          p 'completed: %s, pos %s' % [lhs, item.origin.index]
         reduce_sym(item.origin, lhs)
       end
     end

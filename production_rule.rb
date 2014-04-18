@@ -1,25 +1,29 @@
 class ProductionRule
-  attr_accessor :lhs, :rhs, :pos
+  EMPTY = :":empty::"
 
-  def initialize lhs, rhs, pos=nil
+  attr_accessor :lhs, :rhs, :pos, :symbol_table
+
+  def initialize lhs, rhs, symbol_table, pos=nil
+    raise  if symbol_table.kind_of? Integer # refactoring
     unless lhs.kind_of?(Symbol) || lhs.sym.kind_of?(Symbol)
       raise  ArgumentError  
     end
     # FIXME ADD support for differentiating terminals and
     # nonterminals.
-    @lhs, = GrammarSymbol::builder(lhs)
-    @rhs = GrammarSymbol::builder(rhs)
+    @symbol_table = symbol_table
+    @lhs = symbol_table.add(lhs)
+    @rhs = rhs.map {|s| symbol_table.add(s)}
     @pos = pos
   end
 
   def to_s
-    o = "#@lhs -> #{@rhs.inspect}"
+    o = "#{@lhs} -> #{@rhs.inspect}"
     o << ",#{pos}"  if pos
     o
   end
 
   def empty?
-    rhs == GrammarSymbol::EMPTY
+    rhs == [EMPTY]
   end
 
   def == other
@@ -27,7 +31,7 @@ class ProductionRule
   end
 
   def sort_key
-    [lhs.to_s, rhs.inspect, pos]
+    [lhs.inspect, rhs.inspect, pos]
   end
 
   def penultimate?
@@ -36,7 +40,7 @@ class ProductionRule
     end
     @penul_calculated = true
     return nil  unless self.next
-    if !GrammarSymbol::e_non_terminal?(postdot) && !self.next.next
+    if !symbol_table.e_non_terminal?(postdot) && !self.next.next
       @penul = postdot
     else
       @penul = nil
@@ -51,10 +55,10 @@ class ProductionRule
     return @next  if @next
     pos = @pos
     pos += 1
-    if postdot && GrammarSymbol::e_non_terminal?(rhs[pos])
-      @next = ProductionRule.new(lhs, rhs, pos).next
+    if postdot && symbol_table.e_non_terminal?(rhs[pos])
+      @next = ProductionRule.new(lhs, rhs, symbol_table, pos).next
     elsif postdot || pos == rhs.size
-      @next = ProductionRule.new(lhs, rhs, pos)
+      @next = ProductionRule.new(lhs, rhs, symbol_table, pos)
     else
       nil
     end
@@ -70,15 +74,9 @@ class ProductionRule
 
   def consume_e_non_terminals
     pos = 0
-    while GrammarSymbol::e_non_terminal?(rhs[pos])
+    while symbol_table.e_non_terminal?(rhs[pos])
       pos += 1
     end
     self.pos = pos
-  end
-
-  module Alias
-    def rule lhs, *rhs
-      ProductionRule.new lhs, rhs
-    end
   end
 end

@@ -41,7 +41,7 @@ class StateMachine
     @starting_state = add_state(grammar.start_productions)
     queue.unshift @starting_state
     while(state = queue.shift)
-      generate_state(state, GrammarSymbol::EMPTY,
+      generate_state(state, ProductionRule::EMPTY,
                      state.nonkernels(grammar), queue)
       transition_states state, queue
     end

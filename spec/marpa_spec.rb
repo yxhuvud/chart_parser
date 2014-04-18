@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Marpa do 
   let!(:palindrome) { PALINDROME }
   let!(:ambigous_a) { AMBIGOUS_A }
+  let!(:right_recursive) { RIGHT_RECURSIVE }
+  let!(:left_recursive) { LEFT_RECURSIVE }
 
   describe :palindrome do 
     let(:parser) { Marpa.new(palindrome) }
@@ -67,6 +69,44 @@ describe Marpa do
 
     it "parse 'abcba'" do 
       subject.parse("abcba").should be_true
+    end
+  end
+
+  describe :left_recursion do
+    let(:parser) { Marpa.new(left_recursive) }
+    subject { parser }
+
+    it :parses do
+      xs = 'x' * 100
+      subject.parse(xs).should be_true
+    end
+
+    it :without_using_n_states_per_chart do
+      xs = 'x' * 100
+      subject.parse xs
+      subject.chart.items.size.should < 5
+      #puts
+     # p subject.state_machine
+     # puts subject.charts.map(&:inspect).join("\n")
+    end
+  end
+
+  describe :right_recursion do
+    let(:parser) { Marpa.new(right_recursive) }
+    subject { parser }
+
+    it :parses do
+      xs = 'x' * 100
+      subject.parse(xs).should be_true
+    end
+
+    it :without_using_n_states_per_chart do
+      xs = 'x' * 10
+      subject.parse xs
+      # puts
+      # p subject.state_machine
+      puts subject.charts.map(&:inspect).join("\n")
+      subject.chart.items.size.should < 5
     end
   end
 end

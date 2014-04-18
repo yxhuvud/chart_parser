@@ -38,7 +38,7 @@ class State
     lhss_to_find = dotted_rules.map(&:current).compact.uniq
     while (lhs = lhss_to_find.pop)
       next  if visited.include?(lhs)
-      next  if GrammarSymbol::e_non_terminal?(lhs)
+      next  if grammar.symbol_table.e_non_terminal?(lhs)
       visited << lhs
       rules = grammar.matching_rules(lhs)
       rules.each do |exp|

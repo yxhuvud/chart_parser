@@ -1,14 +1,9 @@
-include ProductionRule::Alias
+AMBIGOUS_A = GrammarDefinition.define do 
+  start :Start
 
-production_rules = [
-                    rule(:Start, :S),
-
-                    rule(:S, :A, :A, :A, :A),
-
-                    rule(:A, 'a'),
-                    rule(:A, :e),
-
-                    rule(:e, GrammarSymbol::EMPTY)
-                   ]
-
-AMBIGOUS_A = Grammar.new(production_rules, :Start)
+  rule :Start, :S
+  rule :S, :A, :A, :A, :A
+  rule :A, 'a'
+  rule :A, :E
+  rule :E, empty  
+end
