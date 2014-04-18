@@ -20,7 +20,7 @@ class Chart
   def add_item state, origin
     return  if origin && (origin.psl[state.index] == index)
 #    p 'adding [%s, %s]' % [state, origin && origin.index]
-    origin.psl[state.index] = index  if origin
+    origin.psl[state.index] = index
     item = EarleyItem.new(state, origin)    
     @items << item
   end
@@ -78,7 +78,6 @@ class Chart
     items.each do |item|
    #   p "reducing item %s" % item
       item.completed.each do |lhs|
-        next  unless item.origin # start production
     #          p 'completed: %s, pos %s' % [lhs, item.origin.index]
         reduce_sym(item.origin, lhs)
       end
