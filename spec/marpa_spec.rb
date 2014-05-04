@@ -30,10 +30,6 @@ describe Marpa do
       subject.parse("ab").should be_false
     end
 
-    it "parse 'ab'" do 
-      subject.parse("ab").should be_false
-    end
-
     it "parse 'abc'" do 
       subject.parse("abc").should be_false
     end
