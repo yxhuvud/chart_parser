@@ -79,7 +79,7 @@ class State
     expanded = goto(ProductionRule::EMPTY)
     return  unless  expanded
     expanded.transitions.each do |k, v| 
-      (recursions << k)  if v == self 
+      (recursions << k)  if v == self
     end
   end
 
