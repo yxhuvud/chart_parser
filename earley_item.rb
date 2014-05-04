@@ -1,5 +1,4 @@
 class EarleyItem
-  
   attr_accessor :state, :origin
 
   def to_s
@@ -27,12 +26,12 @@ class EarleyItem
     state.postdot_symbols
   end
   
-  def scan sym, chart
-    chart.add goto(sym), origin
-  end
-  
-  def reduce sym, chart
-    chart.add(goto(sym), origin)
+  def reduce chart
+    completed.each do |lhs|
+      origin.transitions[lhs].each do |item|
+        chart.add(item)
+      end
+    end
   end
 end
 

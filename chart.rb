@@ -17,34 +17,30 @@ class Chart
       [index, items.map(&:to_s).join("  ")]
   end
   
-  def add_item state, origin
-    return  if origin && (origin.psl[state.index] == index)
-#    p 'adding [%s, %s]' % [state, origin && origin.index]
-    origin.psl[state.index] = index
-    item = EarleyItem.new(state, origin)    
+  def add_item item
+    return  if item.origin.psl[item.state.index] == index
+    #    p 'adding [%s, %s]' % [state, origin && origin.index]
+    item.origin.psl[item.state.index] = index
     @items << item
   end
   
-  def add state, origin
-    add_item(state, origin)
-    predicted = state.goto(ProductionRule::EMPTY)
-    if predicted
-      add_item(predicted, self)
+  def add item
+    add_item(item)
+    predicted = item.goto(ProductionRule::EMPTY)
+    if predicted 
+      add_item(EarleyItem.new(predicted, self))
     end
   end
 
   def empty? 
-   @items.empty?
+    @items.empty?
   end
 
   def memoize_transitions
     @items.each do |item|
       item.postdot_symbols.each do |sym|
-      #  if leo_eligible?(sym)
-      #    transitions[sym] = [LeoItem.new(item, sym)]
-      #  else
-          transitions[sym] += [item]
-      #  end
+        next_item = item.goto(sym)
+          transitions[sym] << EarleyItem.new(next_item, item.origin)
       end
     end
   end
@@ -69,25 +65,11 @@ class Chart
  #   puts
   #  p "scanning %s" % sym
   #  p transitions
-    transitions[sym].each do |item|
-      item.scan(sym, current)
-    end
+    transitions[sym].each { |item| current.add(item) }
   end
 
   def reduce
-    items.each do |item|
-   #   p "reducing item %s" % item
-      item.completed.each do |lhs|
-    #          p 'completed: %s, pos %s' % [lhs, item.origin.index]
-        reduce_sym(item.origin, lhs)
-      end
-    end
-  end
-
-  def reduce_sym source, sym
-    source.transitions[sym].each do |item|
-      item.reduce sym, self
-    end
+    items.each {|item| item.reduce(self) }
   end
   
   def accept?

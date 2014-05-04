@@ -14,7 +14,7 @@ class Marpa
   def reset
     charts[0] = @chart = Chart.new(0, state_size)
     @previous_chart = nil
-    chart.add state_machine.starting_state, @chart
+    chart.add(EarleyItem.new(state_machine.starting_state, @chart))
     self
   end
 
