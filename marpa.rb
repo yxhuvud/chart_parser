@@ -51,6 +51,5 @@ class Marpa
 
   def reduction_pass
     chart.reduce
-    chart.memoize_transitions
   end
 end
