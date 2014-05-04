@@ -1,10 +1,29 @@
 require 'spec_helper'
 
 describe Marpa do 
+  let!(:a_palindrome) { A_PALINDROME }
   let!(:palindrome) { PALINDROME }
   let!(:ambigous_a) { AMBIGOUS_A }
   let!(:right_recursive) { RIGHT_RECURSIVE }
   let!(:left_recursive) { LEFT_RECURSIVE }
+
+  describe :a_palindrome do 
+    let(:parser) { Marpa.new(a_palindrome) }
+    subject { parser }
+    its(:chart) { should have(1).items }
+    describe :one_char do 
+      before { @result = parser.parse("a") }
+      it("succeds") { @result.should be_true }
+    end
+
+    it "parse 'aa'" do 
+      subject.parse("aa").should be_true
+    end
+
+    it "parse 'aaa'" do 
+      subject.parse("aaaaa").should be_true
+    end
+  end
 
   describe :palindrome do 
     let(:parser) { Marpa.new(palindrome) }

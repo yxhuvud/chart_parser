@@ -9,6 +9,7 @@ require_relative '../chart'
 require_relative '../marpa'
 
 require_relative 'examples/palindrome'
+require_relative 'examples/a_palindrome'
 require_relative 'examples/ambigous_a'
 require_relative 'examples/right_recursive'
 require_relative 'examples/left_recursive'
