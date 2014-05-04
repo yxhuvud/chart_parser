@@ -7,6 +7,7 @@ class StateMachine
     @states = {}
     generate_states
     mark_accept_states
+    mark_recursions
   end
 
   def to_s
@@ -56,6 +57,10 @@ class StateMachine
       end
       state.accept = true
     end
+  end
+
+  def mark_recursions
+    states.values.each &:mark_recursive
   end
 
   def transition_states state, queue

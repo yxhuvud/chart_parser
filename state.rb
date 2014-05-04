@@ -1,5 +1,5 @@
 class State
-  attr_accessor :dotted_rules, :state_machine, :transitions, :index
+  attr_accessor :dotted_rules, :state_machine, :transitions, :index, :recursions
   attr_writer :accept
 
   def to_s
@@ -17,6 +17,7 @@ class State
   def initialize state_machine, dotted_rules, index
     @index = index
     @transitions = {}
+    @recursions = Set.new
     @state_machine = state_machine
     raise  if dotted_rules.empty?
     raise  unless dotted_rules.all? {|r| r.kind_of? ProductionRule}
@@ -70,5 +71,17 @@ class State
   
   def completed_rules
     dotted_rules.select &:completed?
+  end
+
+  def mark_recursive
+    expanded = goto(ProductionRule::EMPTY)
+    return  unless  expanded
+    expanded.transitions.each do |k, v| 
+      (recursions << k)  if v == self 
+    end
+  end
+
+  def recursive?
+    recursions.any?
   end
 end
