@@ -1,7 +1,6 @@
 LEFT_RECURSIVE = GrammarDefinition.define do 
-  start :Start
+  start :S
 
-  rule :Start, :S
   rule :S, :S, 'x'
   rule :S, 'x'  
 end

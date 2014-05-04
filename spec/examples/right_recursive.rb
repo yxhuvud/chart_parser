@@ -1,7 +1,5 @@
 RIGHT_RECURSIVE = GrammarDefinition.define do 
-  start :Start
-
-  rule :Start, :S
+  start :S
   
   rule :S, 'x', :S
   rule :S, 'x'
