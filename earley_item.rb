@@ -6,6 +6,8 @@ class EarleyItem
   end
 
   def initialize state, origin
+    raise  unless state
+
     @state = state
     @origin = origin
   end
@@ -38,14 +40,18 @@ end
 class LeoItem < EarleyItem
   attr_accessor :trans
 
-  def initialize eim, trans
-    self.origin = eim.origin
-    self.state = eim.state
+  def initialize state, origin, trans
+    raise  unless state
+    self.origin = origin
+    self.state = state
     self.trans = trans
-  end
-  
-  def reduce sym, chart
-    chart.add_item(goto(trans), origin)
+  end  
+
+  def reduce chart
+    cont = goto(trans)
+    cont.completed.each do |lhs|
+      chart.add(EarleyItem.new(cont.goto(lhs), chart))
+    end
   end
 
   def to_s

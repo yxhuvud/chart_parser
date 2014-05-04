@@ -40,24 +40,13 @@ class Chart
     @items.each do |item|
       item.postdot_symbols.each do |sym|
         next_item = item.goto(sym)
+        if next_item.recursive?
+          transitions[sym] << LeoItem.new(item.state, item.origin, sym)
+        else
           transitions[sym] << EarleyItem.new(next_item, item.origin)
+        end
       end
     end
-  end
-
-  def leo_eligible? d_rule
-    d_rule.right_recursive? && leo_unique?(d_rule)
-  end
-
-  # move to earley_set.
-  def leo_unique? d_rule
-    penult = d_rule.penult
-    penult && items.contain?(d_rule) &&
-      penult_unique?(earley_items, penult)
-  end
-
-  def penult_unique? items, penult
-    items.map(&:penult).compact!.one?
   end
 
   def scan sym, current
