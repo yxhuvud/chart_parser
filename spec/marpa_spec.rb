@@ -28,7 +28,7 @@ describe Marpa do
   describe :palindrome do 
     let(:parser) { Marpa.new(palindrome) }
     subject { parser }
-    its(:chart) { should have(2).items }
+    its(:chart) { should have(1).items }
     
     describe :empty do
       before { @result = parser.parse("") }
@@ -36,7 +36,7 @@ describe Marpa do
       
       describe :items do 
         subject { parser.chart }
-        its(:items) { should have(2).items }
+        its(:items) { should have(1).items }
       end
     end
 

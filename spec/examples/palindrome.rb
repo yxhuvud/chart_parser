@@ -1,7 +1,5 @@
 PALINDROME = GrammarDefinition.define do 
-  start :Start
-
-  rule :Start, :S
+  start :S
 
   rule :S, 'a', :S2, 'a'
   rule :S, 'b', :S2, 'b'
