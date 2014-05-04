@@ -29,7 +29,6 @@ class Marpa
   def marpa_pass sym, index
     @previous_chart = chart
     @previous_chart.memoize_transitions
-
     @chart = Chart.new(@previous_chart.index.succ, state_size)
     charts[index + 1] = chart
     consume sym
