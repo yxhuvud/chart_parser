@@ -58,7 +58,9 @@ class State
     nexts.each do |k, v|
       nexts[k] = v.map(&:next).compact
     end
-    nexts.reject {|k, v| v.empty? }
+    nexts.reject do |k, v| 
+      v.empty? || v == self.dotted_rules 
+    end
   end
 
   def accept?
