@@ -10,8 +10,10 @@ class State
     transs = transitions.map do |sym, dest|
       "%s->%s" % [sym, dest]
     end.join(" ")
-    "State %s:\n%s\n--> %s" % 
-      [to_s, dotted_rules.map(&:inspect).join("\n"), transs]
+    accept = accept? ? '+': ''
+    rec = recursive? ? 'r' : ''
+    "State %s %s:\n%s\n--> %s" % 
+      [to_s, accept+rec, dotted_rules.map(&:inspect).join("\n"), transs]
   end
 
   def initialize state_machine, dotted_rules, index
