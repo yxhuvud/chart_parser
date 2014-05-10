@@ -39,11 +39,11 @@ class Chart
   def memoize_transitions
     @items.each do |item|
       item.postdot_symbols.each do |sym|
-        next_item = item.goto(sym)
-        if next_item.recursive?
+        next_state = item.goto(sym)
+        if next_state.recursive?
           transitions[sym] << LeoItem.new(item.state, item.origin, sym)
         else
-          transitions[sym] << EarleyItem.new(next_item, item.origin)
+          transitions[sym] << EarleyItem.new(next_state, item.origin)
         end
       end
     end
