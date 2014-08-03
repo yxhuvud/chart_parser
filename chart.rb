@@ -40,7 +40,7 @@ class Chart
     @items.each do |item|
       item.postdot_symbols.each do |sym|
         next_state = item.goto(sym)
-        if next_state.recursive?
+        if next_state.recursive? && next_state.penult?
           transitions[sym] << LeoItem.new(item.state, item.origin, sym)
         else
           transitions[sym] << EarleyItem.new(next_state, item.origin)

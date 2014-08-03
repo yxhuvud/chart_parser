@@ -1,6 +1,6 @@
 class State
   attr_accessor :dotted_rules, :state_machine, :transitions, :index, :recursions
-  attr_writer :accept
+  attr_writer :accept, :penult
 
   def to_s
     index.to_s
@@ -12,8 +12,9 @@ class State
     end.join(" ")
     accept = accept? ? '+': ''
     rec = recursive? ? 'r' : ''
-    "State %s %s:\n%s\n--> %s" % 
-      [to_s, accept+rec, dotted_rules.map(&:inspect).join("\n"), transs]
+    pen = penult? ? '|' : ''
+    "State %s %s:\n%s\n--> %s" %
+      [to_s, accept+rec+pen, dotted_rules.map(&:inspect).join("\n"), transs]
   end
 
   def initialize state_machine, dotted_rules, index
@@ -83,6 +84,17 @@ class State
     expanded.transitions.each do |k, v|
       (recursions << k)  if v == self
     end
+  end
+
+  def mark_penult
+    @penult = transitions.all? do |k, v|
+      next true  if k == ProductionRule::EMPTY
+      v.transitions.empty?
+    end
+  end
+
+  def penult?
+    @penult
   end
 
   def recursive?

@@ -8,6 +8,7 @@ class StateMachine
     generate_states
     mark_accept_states
     mark_recursions
+    mark_penults
   end
 
   def to_s
@@ -61,6 +62,10 @@ class StateMachine
 
   def mark_recursions
     states.values.each &:mark_recursive
+  end
+
+  def mark_penults
+    states.values.each &:mark_penult
   end
 
   def transition_states state, queue
