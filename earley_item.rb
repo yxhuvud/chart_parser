@@ -49,8 +49,9 @@ class LeoItem < EarleyItem
 
   def reduce chart
     cont = goto(trans)
+    chart.add_item(EarleyItem.new(cont, chart))
     cont.completed.each do |lhs|
-      chart.add(EarleyItem.new(cont.goto(lhs), chart))
+      chart.add_item(EarleyItem.new(cont.goto(lhs), origin))
     end
   end
 
