@@ -2,7 +2,7 @@ class Chart
   class << self
     attr_accessor :psl
   end
-  
+
   attr_accessor :index, :transitions, :psl, :items
 
   def initialize index, state_size
@@ -13,26 +13,26 @@ class Chart
   end
 
   def to_s
-    "Items(%s)[ %s ]" % 
+    "Items(%s)[ %s ]" %
       [index, items.map(&:to_s).join("  ")]
   end
-  
+
   def add_item item
     return  if item.origin.psl[item.state.index] == index
     #    p 'adding [%s, %s]' % [state, origin && origin.index]
     item.origin.psl[item.state.index] = index
     @items << item
   end
-  
+
   def add item
     add_item(item)
     predicted = item.goto(ProductionRule::EMPTY)
-    if predicted 
+    if predicted
       add_item(EarleyItem.new(predicted, self))
     end
   end
 
-  def empty? 
+  def empty?
     @items.empty?
   end
 
@@ -60,11 +60,11 @@ class Chart
   def reduce
     items.each {|item| item.reduce(self) }
   end
-  
+
   def accept?
     items.any? &:accept?
   end
-  
+
   def completed sym
     # fixme more efficient!
     items.map(&:completed)

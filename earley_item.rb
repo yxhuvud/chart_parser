@@ -27,7 +27,7 @@ class EarleyItem
   def postdot_symbols
     state.postdot_symbols
   end
-  
+
   def reduce chart
     completed.each do |lhs|
       origin.transitions[lhs].each do |item|
@@ -45,7 +45,7 @@ class LeoItem < EarleyItem
     self.origin = origin
     self.state = state
     self.trans = trans
-  end  
+  end
 
   def reduce chart
     cont = goto(trans)
@@ -55,8 +55,7 @@ class LeoItem < EarleyItem
   end
 
   def to_s
-    "Leo[%s, %s, %s]" % 
+    "Leo[%s, %s, %s]" %
       [state, (origin && origin.index), trans]
   end
 end
-

@@ -27,7 +27,7 @@ class StateMachine
     @states[dotted.sort_by(&:sort_key)] = new_state
     new_state
   end
-  
+
   def generate_state from, sym, dotted, queue
     return  if dotted.empty?
     unless (new_state = get(dotted))

@@ -68,11 +68,11 @@ class State
   def accept?
     @accept
   end
-  
+
   def completed
     @completed ||= completed_rules.map(&:lhs)
   end
-  
+
   def completed_rules
     dotted_rules.select &:completed?
   end
@@ -80,7 +80,7 @@ class State
   def mark_recursive
     expanded = goto(ProductionRule::EMPTY)
     return  unless  expanded
-    expanded.transitions.each do |k, v| 
+    expanded.transitions.each do |k, v|
       (recursions << k)  if v == self
     end
   end

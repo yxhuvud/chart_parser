@@ -1,59 +1,61 @@
 require 'spec_helper'
 
-describe Marpa do 
+describe Marpa do
   let!(:a_palindrome) { A_PALINDROME }
   let!(:palindrome) { PALINDROME }
   let!(:ambigous_a) { AMBIGOUS_A }
   let!(:right_recursive) { RIGHT_RECURSIVE }
   let!(:left_recursive) { LEFT_RECURSIVE }
 
-  describe :a_palindrome do 
+  describe :a_palindrome do
     let(:parser) { Marpa.new(a_palindrome) }
     subject { parser }
+
     its(:chart) { should have(1).items }
-    describe :one_char do 
+
+    describe :one_char do
       before { @result = parser.parse("a") }
       it("succeds") { @result.should be_true }
     end
 
-    it "parse 'aa'" do 
+    it "parse 'aa'" do
       subject.parse("aa").should be_true
     end
 
-    it "parse 'aaa'" do 
+    it "parse 'aaa'" do
       subject.parse("aaaaa").should be_true
     end
   end
 
-  describe :palindrome do 
+  describe :palindrome do
     let(:parser) { Marpa.new(palindrome) }
     subject { parser }
     its(:chart) { should have(1).items }
-    
+
     describe :empty do
       before { @result = parser.parse("") }
       it("fails") { @result.should be_false }
-      
-      describe :items do 
+
+      describe :items do
         subject { parser.chart }
         its(:items) { should have(1).items }
       end
     end
 
-    describe :one_char do 
+    describe :one_char do
       before { @result = parser.parse("a") }
       it("succeds") { @result.should be_true }
     end
 
-    it "parse 'ab'" do 
+    it "parse 'ab'" do
       subject.parse("ab").should be_false
     end
 
-    it "parse 'abc'" do 
+    it "parse 'abc'" do
       subject.parse("abc").should be_false
     end
 
-    it "parse 'aba'" do 
+    it "parse 'aba'" do
       r = subject.parse("a")
       r.should be_true
       r = subject.parse("b")
@@ -68,21 +70,20 @@ describe Marpa do
       r.should be_true
     end
 
-    describe :multiple_chars do 
+    describe :multiple_chars do
       before { @result = parser.parse("abaab") }
       it("fails") { @result.should be_false }
       it("succeeds after continuing") do
         result = parser.parse("a")
-        result.should be_true 
+        result.should be_true
       end
-
     end
 
-    it "parse 'abaaba'" do 
+    it "parse 'abaaba'" do
       subject.parse("abaaba").should be_true
     end
 
-    it "parse 'abcba'" do 
+    it "parse 'abcba'" do
       subject.parse("abcba").should be_true
     end
   end
