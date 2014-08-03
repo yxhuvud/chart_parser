@@ -121,7 +121,7 @@ describe Marpa do
       subject.parse xs
       # puts
       # p subject.state_machine
-      puts subject.charts.map(&:inspect).join("\n")
+      # puts subject.charts.map(&:inspect).join("\n")
       subject.chart.items.size.should < 5
     end
   end
