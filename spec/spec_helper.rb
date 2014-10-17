@@ -1,3 +1,12 @@
+require 'rspec/its'
+require 'rspec/collection_matchers'
+RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+end
+
+
 require_relative '../symbol_table'
 require_relative '../grammar'
 require_relative '../grammar_definition'
