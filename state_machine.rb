@@ -15,6 +15,10 @@ class StateMachine
     states.values.sort_by(&:index).map(&:inspect).join("\n\n")
   end
 
+  def inspect
+    to_s
+  end
+
   def size
     @states.size
   end

@@ -22,6 +22,10 @@ class ProductionRule
     o
   end
 
+  def inspect
+    to_s
+  end
+
   def empty?
     rhs == [EMPTY]
   end

@@ -17,6 +17,10 @@ class Chart
       [index, items.map(&:to_s).join("  ")]
   end
 
+  def inspect
+    to_s
+  end
+
   def add_item item
     return  if item.origin.psl[item.state.index] == index
     #    p 'adding [%s, %s]' % [state, origin && origin.index]
