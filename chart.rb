@@ -66,6 +66,10 @@ class Chart
     items.any? &:accept?
   end
 
+  def accepted_items
+    items.select &:accept?
+  end
+
   def completed sym
     # fixme more efficient!
     items.map(&:completed)

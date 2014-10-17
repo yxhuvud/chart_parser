@@ -23,7 +23,7 @@ class Marpa
     consumer = method(:marpa_pass)
     generator = source.kind_of?(Enumerator) ?  source : source.each_char
     generator.each.with_index &consumer
-    success?
+    accept?
   end
 
   def marpa_pass sym, index
@@ -41,7 +41,7 @@ class Marpa
     reduction_pass
   end
 
-  def success?
+  def accept?
     chart.accept?
   end
 
