@@ -50,12 +50,14 @@ class Chart
     end
   end
 
-  def scan sym, current
+  def scan char, current
     # FIXME: Use a proper lookup table.
- #   puts
-  #  p "scanning %s" % sym
-  #  p transitions
-    transitions[sym].each { |item| current.add(item) }
+    transitions[char].each do |item|
+      # FIXME: Instead of storing on item, look at the state machine
+      # when needed.
+      item.scanned = char
+      current.add(item)
+    end
   end
 
   def reduce

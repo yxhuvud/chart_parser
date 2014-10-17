@@ -1,8 +1,12 @@
 class EarleyItem
-  attr_accessor :state, :origin
+  attr_accessor :state, :origin, :scanned
 
   def to_s
-    "Earley[%s, %s]" % [state, (origin && origin.index)]
+    if scanned
+      "Earley[%s, %s](%s)" % [state, (origin && origin.index), scanned]
+    else
+      "Earley[%s, %s]" % [state, (origin && origin.index)]
+    end
   end
 
   def initialize state, origin
