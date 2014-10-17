@@ -6,7 +6,7 @@ class ProductionRule
   def initialize lhs, rhs, symbol_table, pos=nil
     raise  if symbol_table.kind_of? Integer # refactoring
     unless lhs.kind_of?(Symbol) || lhs.sym.kind_of?(Symbol)
-      raise  ArgumentError  
+      raise  ArgumentError
     end
     # FIXME ADD support for differentiating terminals and
     # nonterminals.

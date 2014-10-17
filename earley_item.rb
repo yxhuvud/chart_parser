@@ -6,8 +6,7 @@ class EarleyItem
   end
 
   def initialize state, origin
-    raise  unless state
-
+    raise ArgumentError, "state missing"  unless state
     @state = state
     @origin = origin
   end

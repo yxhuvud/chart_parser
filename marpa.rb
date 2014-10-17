@@ -33,11 +33,11 @@ class Marpa
     charts[index + 1] = chart
     consume sym
   end
-  
+
   def consume sym
     scan_pass sym
     #TODO: Slippers
-    return  if chart.empty? 
+    return  if chart.empty?
     reduction_pass
   end
 

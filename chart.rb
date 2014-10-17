@@ -1,7 +1,4 @@
 class Chart
-  class << self
-    attr_accessor :psl
-  end
 
   attr_accessor :index, :transitions, :psl, :items
 

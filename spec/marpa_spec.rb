@@ -13,17 +13,14 @@ describe Marpa do
 
     its(:chart) { should have(1).items }
 
-    describe :one_char do
-      before { @result = parser.parse("a") }
-      it("succeds") { @result.should be_true }
-    end
+    it("one_char succeds") { parser.parse("a").should be_truthy }
 
     it "parse 'aa'" do
-      subject.parse("aa").should be_true
+      subject.parse("aa").should be_truthy
     end
 
     it "parse 'aaa'" do
-      subject.parse("aaaaa").should be_true
+      subject.parse("aaaaa").should be_truthy
     end
   end
 
@@ -33,8 +30,8 @@ describe Marpa do
     its(:chart) { should have(1).items }
 
     describe :empty do
-      before { @result = parser.parse("") }
-      it("fails") { @result.should be_false }
+      before { @res = parser.parse("") }
+      it("fails") { @res.should be_falsey }
 
       describe :items do
         subject { parser.chart }
@@ -43,48 +40,48 @@ describe Marpa do
     end
 
     describe :one_char do
-      before { @result = parser.parse("a") }
-      it("succeds") { @result.should be_true }
+      subject { parser.parse("a") }
+      it("succeds") { should be_truthy }
     end
 
     it "parse 'ab'" do
-      subject.parse("ab").should be_false
+      subject.parse("ab").should be_falsey
     end
 
     it "parse 'abc'" do
-      subject.parse("abc").should be_false
+      subject.parse("abc").should be_falsey
     end
 
     it "parse 'aba'" do
       r = subject.parse("a")
-      r.should be_true
+      r.should be_truthy
       r = subject.parse("b")
-      r.should be_false
+      r.should be_falsey
       r = subject.parse("a")
-      r.should be_true
+      r.should be_truthy
       r = subject.parse("a")
-      r.should be_false
+      r.should be_falsey
       r = subject.parse("b")
-      r.should be_false
+      r.should be_falsey
       r = subject.parse("a")
-      r.should be_true
+      r.should be_truthy
     end
 
     describe :multiple_chars do
       before { @result = parser.parse("abaab") }
-      it("fails") { @result.should be_false }
+      it("fails") { @result.should be_falsey }
       it("succeeds after continuing") do
         result = parser.parse("a")
-        result.should be_true
+        result.should be_truthy
       end
     end
 
     it "parse 'abaaba'" do
-      subject.parse("abaaba").should be_true
+      subject.parse("abaaba").should be_truthy
     end
 
     it "parse 'abcba'" do
-      subject.parse("abcba").should be_true
+      subject.parse("abcba").should be_truthy
     end
   end
 
@@ -94,16 +91,16 @@ describe Marpa do
 
     it :parses do
       xs = 'x' * 100
-      subject.parse(xs).should be_true
+      subject.parse(xs).should be_truthy
     end
 
     it :without_using_n_states_per_chart do
-      xs = 'x' * 100
+      xs = 'x' * 10
       subject.parse xs
       subject.chart.items.size.should < 5
-      #puts
-     # p subject.state_machine
-     # puts subject.charts.map(&:inspect).join("\n")
+      # puts
+      # p subject.state_machine
+      # puts subject.charts.map(&:inspect).join("\n")
     end
   end
 
@@ -113,7 +110,7 @@ describe Marpa do
 
     it :parses do
       xs = 'x' * 100
-      subject.parse(xs).should be_true
+      subject.parse(xs).should be_truthy
     end
 
     it :without_using_n_states_per_chart do
