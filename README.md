@@ -2,6 +2,8 @@
 
 A parser generator heavily influenced by the Marpa parsing algorithm.
 
+Not much to see here right now.
+
 ## Reading List
 http://blogs.perl.org/users/jeffrey_kegler/2013/05/why-marpa-works-table-parsing.html
 
