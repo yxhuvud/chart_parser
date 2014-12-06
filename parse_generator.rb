@@ -1,11 +1,11 @@
 class ParseGenerator
-  :end_chart
-  
-  def initialize chart
-    @end_chart = chart
+  attr_accessor :parser, :charts
+
+  def initialize parser
+    @parser = parser
+    @charts = parser.charts
+    parser
   end
 
-  def next
-    
-  end
+
 end

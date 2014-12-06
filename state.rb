@@ -75,7 +75,7 @@ class State
   end
 
   def completed_rules
-    dotted_rules.select &:completed?
+    @completed_rules ||= dotted_rules.select(&:completed?)
   end
 
   def mark_recursive
@@ -99,5 +99,9 @@ class State
 
   def recursive?
     recursions.any?
+  end
+
+  def leo?
+    recursive? && penult?
   end
 end

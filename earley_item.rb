@@ -1,5 +1,5 @@
 class EarleyItem
-  attr_accessor :state, :origin, :scanned
+  attr_accessor :state, :origin, :node
 
   def to_s
     if scanned
@@ -7,6 +7,10 @@ class EarleyItem
     else
       "Earley[%s, %s]" % [state, (origin && origin.index)]
     end
+  end
+
+  def hash
+    state.hash + origin.index.hash
   end
 
   def initialize state, origin
@@ -33,7 +37,10 @@ class EarleyItem
 
   def reduce chart
     completed.each do |lhs|
+      new_node = SPPFNode.new(lhs, origin.index, chart.index)
       origin.transitions[lhs].each do |item|
+        item.node = new_node
+        item.node.family node
         chart.add(item)
       end
     end
@@ -52,9 +59,17 @@ class LeoItem < EarleyItem
 
   def reduce chart
     cont = goto(trans)
-    chart.add_item(EarleyItem.new(cont, chart))
+    # First add the current leaf of the recursion.
+    # FIXME: origin.index should be previous item of the leo recursion.
+    node = SPPFNode.new(trans, origin.index, chart.index)
+
+    leaf_item = EarleyItem.new(cont, chart)
+    chart.add_item(leaf_item)
+    # Then reduce from the root.
     cont.completed.each do |lhs|
-      chart.add_item(EarleyItem.new(cont.goto(lhs), origin))
+      node = SPPFNode.new(lhs, origin.index, chart.index)
+      recursion_root_item = EarleyItem.new(cont.goto(lhs), origin)
+      chart.add_item(recursion_root_item)
     end
   end
 

@@ -12,9 +12,11 @@ class Marpa
   end
 
   def reset
-    charts[0] = @chart = Chart.new(0, state_size)
+    charts[0] = @chart = Chart.new(0, state_size, self)
     @previous_chart = nil
-    chart.add(EarleyItem.new(state_machine.starting_state, @chart))
+    item = EarleyItem.new(state_machine.starting_state, @chart)
+    item.node = SPPFNode.new(nil, 0, 0)
+    chart.add(item)
     self
   end
 
@@ -29,7 +31,7 @@ class Marpa
   def marpa_pass sym, index
     @previous_chart = chart
     @previous_chart.memoize_transitions
-    @chart = Chart.new(@previous_chart.index.succ, state_size)
+    @chart = Chart.new(@previous_chart.index.succ, state_size, self)
     charts[index + 1] = chart
     consume sym
   end

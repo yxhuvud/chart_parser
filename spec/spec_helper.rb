@@ -7,12 +7,14 @@ RSpec.configure do |config|
 end
 
 
+require_relative '../sppf_node'
 require_relative '../symbol_table'
 require_relative '../grammar'
 require_relative '../grammar_definition'
 require_relative '../production_rule'
 require_relative '../state'
 require_relative '../state_machine'
+require_relative '../parse_generator'
 require_relative '../earley_item'
 require_relative '../chart'
 require_relative '../marpa'

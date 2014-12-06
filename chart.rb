@@ -1,12 +1,12 @@
 class Chart
+  attr_accessor :index, :transitions, :psl, :items, :parser
 
-  attr_accessor :index, :transitions, :psl, :items
-
-  def initialize index, state_size
+  def initialize index, state_size, parser
     @index = index
     @items = []
     @transitions = Hash.new {|h,k| h[k] = []}
-    @psl = Array.new(state_size)
+    @psl = {}
+    @parser = parser
   end
 
   def to_s
@@ -19,18 +19,23 @@ class Chart
   end
 
   def add_item item
-    return  if item.origin.psl[item.state.index] == index
-    #    p 'adding [%s, %s]' % [state, origin && origin.index]
-    item.origin.psl[item.state.index] = index
+    return  if psl[item]
+    psl[item] = true
     @items << item
+    true
   end
 
   def add item
-    add_item(item)
+    ret = add_item(item)
     predicted = item.goto(ProductionRule::EMPTY)
     if predicted
-      add_item(EarleyItem.new(predicted, self))
+      e_node = SPPFNode.new(ProductionRule::EMPTY, index, index)
+      predicted_item = EarleyItem.new(predicted, self)
+      add_item(predicted_item)
+      item.node.family e_node
+      predicted_item.node = e_node
     end
+    ret
   end
 
   def empty?
@@ -41,21 +46,22 @@ class Chart
     @items.each do |item|
       item.postdot_symbols.each do |sym|
         next_state = item.goto(sym)
-        if next_state.recursive? && next_state.penult?
-          transitions[sym] << LeoItem.new(item.state, item.origin, sym)
-        else
-          transitions[sym] << EarleyItem.new(next_state, item.origin)
-        end
+        transitions[sym] << if next_state.leo?
+                              LeoItem.new(item.state, item.origin, sym)
+                            else
+                              EarleyItem.new(next_state, item.origin)
+                            end
       end
     end
   end
 
   def scan char, current
     # FIXME: Use a proper lookup table.
+    node = SPPFNode.new(char, self.index - 1, self.index)
     transitions[char].each do |item|
       # FIXME: Instead of storing on item, look at the state machine
       # when needed.
-      item.scanned = char
+      item.node = node
       current.add(item)
     end
   end
