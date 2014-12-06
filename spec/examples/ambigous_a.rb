@@ -1,9 +1,9 @@
-AMBIGOUS_A = GrammarDefinition.define do 
+AMBIGOUS_A = ChartParser::grammar do
   start :Start
 
   rule :Start, :S
   rule :S, :A, :A, :A, :A
   rule :A, 'a'
   rule :A, :E
-  rule :E, empty  
+  rule :E, empty
 end

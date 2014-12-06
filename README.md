@@ -1,8 +1,8 @@
-=Chart Parser=
-A Ruby parser extremely heavy influenced by the Marpa parsing algorithm.
+# Chart Parser
 
+A parser generator heavily influenced by the Marpa parsing algorithm.
 
-==Reading List==
+## Reading List
 http://blogs.perl.org/users/jeffrey_kegler/2013/05/why-marpa-works-table-parsing.html
 
 http://jeffreykegler.github.io/Ocean-of-Awareness-blog/metapages/annotated.html

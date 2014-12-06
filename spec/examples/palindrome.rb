@@ -1,4 +1,4 @@
-PALINDROME = GrammarDefinition.define do 
+PALINDROME = ChartParser::grammar do
   start :S
 
   rule :S, 'a', :S2, 'a'
@@ -7,7 +7,7 @@ PALINDROME = GrammarDefinition.define do
   rule :S, 'a'
   rule :S, 'b'
   rule :S, 'c'
-  
+
   rule :S2, empty
   rule :S2, :S
 end

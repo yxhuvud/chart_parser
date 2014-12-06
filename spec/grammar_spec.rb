@@ -4,7 +4,7 @@ describe Grammar do
   let(:e) { :E }
   let(:start) { :Start }
   let(:s) { :S }
-  
+
   let(:empty_grammar) { Grammar.new([], [start], SymbolTable.new) }
   let(:grammar) { AMBIGOUS_A }
 
@@ -34,7 +34,7 @@ describe Grammar do
 
       it "splits on e-syms" do
         gst.e_non_terminal! e
-        g.split_nullable([e]).should == [[e], 
+        g.split_nullable([e]).should == [[e],
                                          [gst.to_e_non_terminal(e)]]
       end
 
@@ -71,7 +71,7 @@ describe Grammar do
       g.add_rule(s, e)
       g.add_rule(s, gst.e(e), e)
       g.add_rule(gst.e(s), gst.e(e), gst.e(e))
-   
+
       swapped.should == g.rules.sort_by(&:sort_key)
     end
    end
